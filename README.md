@@ -54,13 +54,10 @@ Sesuai ketentuan Poin V.4 & V.5 Guidebook:
 
 ---
 
-## 🚀 Panduan Instalasi Lokal (Laragon)
+## 🌐 Live Website (Deployment)
 
-1. Clone atau salin folder proyek ke direktori `laragon/www/Surplus v3`.
-2. Buka Laragon, pastikan Apache dan MySQL aktif.
-3. Buka phpMyAdmin (`http://localhost/phpmyadmin`), buat database baru bernama `sisarasa` atau `wnvjqqvi_rplxbasda`.
-4. Import file `backend.sql` ke database tersebut.
-5. Buka browser pada alamat `http://localhost/Surplus%20v3/` atau Virtual Host yang dikonfigurasi.
+Aplikasi telah di-deploy dan dapat diakses publik secara langsung:
+- **URL Live Website:** [https://tubes-basdaxrpl.web.id/](https://tubes-basdaxrpl.web.id/)
 
 ---
 
