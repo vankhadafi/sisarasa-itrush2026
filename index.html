@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SisaRasa — Ekosistem lelang makanan surplus dan penyaluran donasi pangan terintegrasi di Bengkulu. Nikmati hidangan berkualitas dengan hemat hingga 70%.">
+    <meta name="theme-color" content="#231A14">
+    <title>SisaRasa — Artisanal Surplus Food & Zero-Waste Ecosystem</title>
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23231A14' stroke='%239E7232' stroke-width='3'/%3E%3Ctext x='50' y='62' text-anchor='middle' font-family='Georgia,serif' font-size='38' font-weight='700' fill='%23F5EFE6'%3ESR%3C/text%3E%3C/svg%3E">
+    <!-- Google Fonts: Cormorant Garamond (Editorial Serif), Plus Jakarta Sans (Clean UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- =========================================================
+         HEADER ARTISANAL LUXURY
+         ========================================================= -->
+    <header class="navbar">
+        <div class="nav-brand-group">
+            <a href="#" class="logo" onclick="navigateHome(event)">
+                <span class="logo-monogram">SR</span>
+                <div class="logo-text-wrap">
+                    <span class="logo-main">SISA RASA</span>
+                    <span class="logo-sub">FOOD ECOSYSTEM</span>
+                </div>
+            </a>
+        </div>
+
+        <nav class="nav-links-center" id="desktop-nav">
+            <a href="#" class="nav-link active" onclick="navigateHome(event)">Beranda</a>
+            <a href="#katalog-lelang" class="nav-link">Katalog Lelang</a>
+            <a href="#keunggulan" class="nav-link">Layanan</a>
+            <a href="#tentang-kami" class="nav-link">Tentang Kami</a>
+        </nav>
+
+        <div class="user-status">
+            <div class="location-pin">
+                <span class="pin-dot"></span> Kota Bengkulu
+            </div>
+
+            <!-- Tampil saat belum login -->
+            <div id="guest-nav-actions" class="auth-nav-group">
+                <button class="btn btn-cta" onclick="showView('view-login')">
+                    <span>Masuk Akun</span>
+                </button>
+            </div>
+
+            <!-- Tampil setelah berhasil login -->
+            <div id="user-nav-profile" class="auth-nav-group hidden">
+                <span id="active-role-badge" class="role-indicator">Pembeli</span>
+                <span id="logged-user-name" class="user-name-label"></span>
+                <button class="btn btn-logout btn-sm" onclick="handleLogout()">
+                    Keluar
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobile-nav-menu">
+        <nav class="mobile-nav-content">
+            <a href="#" class="mobile-nav-link" onclick="navigateHome(event)">Beranda</a>
+            <a href="#katalog-lelang" class="mobile-nav-link" onclick="closeMobileMenu()">Katalog Lelang</a>
+            <a href="#keunggulan" class="mobile-nav-link" onclick="closeMobileMenu()">Layanan</a>
+            <a href="#tentang-kami" class="mobile-nav-link" onclick="closeMobileMenu()">Tentang Kami</a>
+            <hr class="mobile-nav-divider">
+            <button class="btn btn-cta full-width" onclick="showView('view-login'); closeMobileMenu();">Masuk / Daftar</button>
+        </nav>
+    </div>
+
+    <!-- =========================================================
+         HALAMAN LOGIN SATU PINTU UNTUK SEMUA AKTOR
+         ========================================================= -->
+    <main id="view-login" class="view-section">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <div class="auth-brand-header">
+                    <span class="logo-monogram" style="width: 56px; height: 56px; font-size: 1.6rem;">SR</span>
+                    <span class="auth-brand-title">SisaRasa</span>
+                </div>
+
+                <div class="auth-tabs">
+                    <button id="tab-login-btn" class="auth-tab active" onclick="switchAuthTab('login')">Masuk Akun</button>
+                    <button id="tab-register-btn" class="auth-tab" onclick="switchAuthTab('register')">Daftar Baru</button>
+                </div>
+
+                <!-- FORM LOGIN SATU PINTU -->
+                <div id="auth-login-panel">
+                    <div class="auth-header">
+                        <h2>Selamat Datang Kembali</h2>
+                        <p>Masuk dengan akun Anda. Sistem otomatis mengarahkan ke dashboard sesuai peran.</p>
+                    </div>
+
+                    <form id="unified-login-form">
+                        <!-- DEMO ACCOUNTS QUICK FILL (SYARAT IT RUSH 2026) -->
+                        <div class="demo-login-box" style="background: rgba(158, 114, 50, 0.08); border: 1px dashed var(--gold-primary); padding: 12px; border-radius: 8px; margin-bottom: 1.2rem;">
+                            <div style="font-size: 0.82rem; font-weight: 600; color: var(--gold-primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Akun Demo Penjurian:</div>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.75rem; padding: 4px 8px;" onclick="fillDemoLogin('pembeli@sisarasa.com', 'pembeli123')">Pembeli</button>
+                                <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.75rem; padding: 4px 8px;" onclick="fillDemoLogin('merchant@sisarasa.com', 'merchant123')">Merchant</button>
+                                <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.75rem; padding: 4px 8px;" onclick="fillDemoLogin('pedulikasih@gmail.com', 'tubes')">Yayasan</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-email">Alamat Email</label>
+                            <input type="email" id="login-email" placeholder="nama@email.com" required autocomplete="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-password">Kata Sandi</label>
+                            <input type="password" id="login-password" placeholder="Masukkan kata sandi" required autocomplete="current-password">
+                        </div>
+
+                        <button type="submit" class="btn btn-cta full-width">Masuk ke Dashboard &rarr;</button>
+                    </form>
+
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <button type="button" class="link-btn" onclick="showView('view-buyer')">&larr; Kembali jelajahi katalog publik</button>
+                    </div>
+                </div>
+
+                <!-- FORM REGISTRASI (KHUSUS PEMBELI & MERCHANT) -->
+                <div id="auth-register-panel" class="hidden">
+                    <div class="auth-header">
+                        <h2>Buat Akun Sisa Rasa</h2>
+                        <p>Daftarkan diri Anda sebagai Pembeli cerdas atau Mitra Merchant penyelamat pangan.</p>
+                    </div>
+
+                    <form id="unified-register-form">
+                        <div class="form-group">
+                            <label for="reg-name">Nama Lengkap / Penanggung Jawab</label>
+                            <input type="text" id="reg-name" placeholder="Contoh: Rina Wijaya" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-email">Alamat Email</label>
+                            <input type="email" id="reg-email" placeholder="nama@email.com" required autocomplete="email">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reg-password">Kata Sandi</label>
+                                <input type="password" id="reg-password" placeholder="Min. 4 karakter" required minlength="4" autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-role">Pilih Peran</label>
+                                <select id="reg-role" required onchange="toggleOrgField(this.value)">
+                                    <option value="buyer">Pembeli</option>
+                                    <option value="merchant">Mitra Merchant</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group hidden" id="reg-org-group">
+                            <label for="reg-org">Nama Toko / Restoran Merchant</label>
+                            <input type="text" id="reg-org" placeholder="Contoh: Roti Hangat Nusantara">
+                        </div>
+
+                        <button type="submit" class="btn btn-cta full-width">Buat Akun & Masuk &rarr;</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- =========================================================
+         1. TAMPILAN PUBLIK / DASHBOARD PEMBELI (HOMEPAGE)
+         ========================================================= -->
+    <main id="view-buyer" class="view-section active">
+        
+        <!-- HERO BANNER MEWAH BERGAYA EDITORIAL -->
+        <section class="hero reveal-up">
+            <div class="hero-content">
+                <span class="hero-kicker"><span class="live-dot-mini"></span> Bursa Kuliner Surplus & Penyaluran Pangan Bengkulu</span>
+                <h1>Selamatkan Kuliner Berkualitas, Hemat Sampai 70%</h1>
+                <p>Jembatan langsung antara bakery, kedai, dan restoran di Kota Bengkulu untuk melepas surplus harian lewat lelang cepat atau disalurkan langsung ke panti dan yayasan sosial.</p>
+                <div class="hero-buttons">
+                    <a href="#katalog-lelang" class="btn btn-cta btn-lg ripple-fx">Jelajahi Lelang Aktif &rarr;</a>
+                    <button class="btn btn-outline btn-lg" onclick="openPartnerLogin()">Gabung Mitra Penjual</button>
+                </div>
+                <!-- Trust Badges -->
+                <div class="hero-trust-badges">
+                    <div class="trust-badge stat-counter-card">
+                        <strong data-target="1420">1.420+</strong>
+                        <span>Porsi Terselamatkan</span>
+                    </div>
+                    <div class="trust-badge stat-counter-card">
+                        <strong data-target="85">85+</strong>
+                        <span>Mitra Kuliner Aktif</span>
+                    </div>
+                    <div class="trust-badge stat-counter-card">
+                        <strong data-target="100">100%</strong>
+                        <span>Lolos Standar Higienis</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-image-frame floating-frame">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=85" alt="Artisanal Bakery & Culinary" loading="eager">
+                    <div class="hero-floating-tag">
+                        <span class="pulse-dot"></span> <span>Lelang aktif di Bengkulu</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container" id="katalog-lelang">
+            
+            <!-- HEADER SEKSI BERGAYA EDITORIAL -->
+            <div class="editorial-section-header">
+                <div>
+                    <span class="editorial-kicker">Katalog Lelang Harian</span>
+                    <h2>Pilihan Makanan Surplus Hari Ini</h2>
+                    <p class="subtitle">Penawaran waktu terbatas dari restoran dan bakery mitra. Ikuti lelang atau beli langsung sebelum batas waktu berakhir dan dialihkan ke program donasi.</p>
+                </div>
+                <div class="live-indicator-badge">
+                    <span class="pulse-dot"></span> Lelang Berlangsung
+                </div>
+            </div>
+
+            <!-- KATEGORI, PENCARIAN & FILTER CEPAT -->
+            <section class="filter-bar">
+                <div class="category-pills">
+                    <button class="pill active" data-category="all">Semua Kategori</button>
+                    <button class="pill" data-category="bakery">Bakery & Pastry</button>
+                    <button class="pill" data-category="berat">Makanan Utama</button>
+                    <button class="pill" data-category="buah">Bahan & Sayur</button>
+                </div>
+
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Cari menu atau nama toko..." aria-label="Cari makanan">
+                    </div>
+                    <div class="location-filter">
+                        <label for="distance-select">Radius:</label>
+                        <select id="distance-select" aria-label="Filter jarak">
+                            <option value="999">Semua Jarak</option>
+                            <option value="1">&lt; 1 km (Terdekat)</option>
+                            <option value="3">&lt; 3 km</option>
+                            <option value="5">&lt; 5 km</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GRID KATALOG PRODUK MAKANAN -->
+            <div id="buyer-food-grid" class="food-grid">
+                <!-- Loading Skeleton -->
+                <div class="food-card skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line w60"></div><div class="skeleton-line w80"></div><div class="skeleton-line w40"></div></div></div>
+                <div class="food-card skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line w60"></div><div class="skeleton-line w80"></div><div class="skeleton-line w40"></div></div></div>
+                <div class="food-card skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line w60"></div><div class="skeleton-line w80"></div><div class="skeleton-line w40"></div></div></div>
+            </div>
+        </div>
+
+        <!-- STRIP 4 KEUNGGULAN -->
+        <section class="feature-strip reveal-up" id="keunggulan">
+            <div class="feature-strip-inner">
+                <div class="feature-item">
+                    <div class="feature-num">01</div>
+                    <div>
+                        <h4>Mitra Kuliner Terverifikasi</h4>
+                        <p>Kerja sama resmi dengan bakery, kafe, dan resto lokal dengan dapur standar bersih.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-num">02</div>
+                    <div>
+                        <h4>Pengecekan Waktu Ketat</h4>
+                        <p>Batas konsumsi transparan, waktu pengambilan tertera jelas sebelum lelang ditutup.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-num">03</div>
+                    <div>
+                        <h4>Alih Donasi Otomatis</h4>
+                        <p>Stok tak terjual langsung diteruskan ke mitra yayasan sosial di Bengkulu tanpa jeda terbuang.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-num">04</div>
+                    <div>
+                        <h4>Harga Adil Konsumen</h4>
+                        <p>Pangkas limbah pangan dapur resto sekaligus bantu warga dapat hidangan bernutrisi hemat.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BANNER GELAP EKSKLUSIF BAWAH -->
+        <section class="luxury-bottom-banner reveal-up" id="tentang-kami">
+            <div class="luxury-banner-inner">
+                <div class="luxury-banner-text">
+                    <span class="editorial-kicker gold-light">KOMITMEN ZERO-WASTE BENGKULU</span>
+                    <h2>Nol Makanan Terbuang Sia-Sia di Dapur Resto</h2>
+                    <p>SisaRasa menghubungkan produsen makanan dengan masyarakat dan lembaga amal. Lelang transparan di sore hari, donasi terjadwal di malam hari, hidangan lezat tetap bermakna.</p>
+                    <button class="btn btn-cta" onclick="openPartnerLogin()">Daftarkan Usaha Kuliner &rarr;</button>
+                </div>
+
+                <div class="luxury-contact-card">
+                    <div class="contact-row">
+                        <div>
+                            <small>Pusat Bantuan & Konfirmasi</small>
+                            <strong>+6289528650250</strong>
+                        </div>
+                    </div>
+                    <div class="contact-row">
+                        <div>
+                            <small>Cakupan Operasional</small>
+                            <strong>Kota Bengkulu & Sekitarnya</strong>
+                        </div>
+                    </div>
+                    <div class="contact-row">
+                        <div>
+                            <small>Kemitraan & Donasi</small>
+                            <strong>kontak@sisarasa.com</strong>
+                        </div>
+                    </div>
+                    <div class="contact-row highlight-row" onclick="showView('view-login')">
+                        <div>
+                            <strong>Masuk Portal Merchant & Yayasan &rarr;</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =========================================================
+         2. TAMPILAN DASHBOARD MERCHANT (PENJUAL)
+         ========================================================= -->
+    <main id="view-merchant" class="view-section">
+        <div class="container">
+            <div class="dashboard-header">
+                <div>
+                    <span class="editorial-kicker">PORTAL MITRA PENJUAL</span>
+                    <h2>Dashboard Mitra Merchant</h2>
+                    <p class="subtitle">Ubah stok kuliner berlebih hari ini menjadi pendapatan tambahan sekaligus kontribusi sosial.</p>
+                </div>
+                <div class="merchant-summary-cards">
+                    <div class="mini-stat">
+                        <span>Stok Aktif Dilelang</span>
+                        <strong id="merchant-active-count">0 Item</strong>
+                    </div>
+                    <div class="mini-stat highlight">
+                        <span>Pendapatan Surplus Hari Ini</span>
+                        <strong id="merchant-revenue">Rp 0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="merchant-grid">
+                <!-- FORM UNGGAH SISA MAKANAN -->
+                <div class="card-panel">
+                    <h3>Unggah Data Makanan Surplus</h3>
+                    <form id="merchant-upload-form">
+                        <div class="form-group">
+                            <label for="input-merchant">Nama Toko / Restoran</label>
+                            <input type="text" id="input-merchant" placeholder="Contoh: Toko Roti Sari Rasa" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-title">Nama Paket Makanan</label>
+                            <input type="text" id="input-title" placeholder="Contoh: Paket 5 Roti Manis & Pastry" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="input-category">Kategori</label>
+                                <select id="input-category" required>
+                                    <option value="bakery">Bakery & Pastry</option>
+                                    <option value="berat">Makanan Utama</option>
+                                    <option value="buah">Buah & Sayuran</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-distance">Estimasi Jarak (km)</label>
+                                <input type="number" step="0.1" id="input-distance" value="1.2" min="0.1" max="25" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-normal-price">Harga Normal (Rp)</label>
+                            <input type="number" id="input-normal-price" placeholder="90000" min="5000" required>
+                        </div>
+
+                        <!-- FITUR INTEGRASI AI: SMART PRICING & SHELF-LIFE ESTIMATOR -->
+                        <div class="ai-assistant-card" style="background: rgba(158, 114, 50, 0.1); border: 1px solid var(--gold-primary); padding: 12px; border-radius: 8px; margin-bottom: 1.2rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <span style="font-size: 0.85rem; font-weight: 700; color: var(--gold-light); display: flex; align-items: center; gap: 6px;">
+                                    <span class="live-dot-mini"></span> AI Smart Pricing & Shelf-Life Estimator
+                                </span>
+                                <button type="button" id="btn-run-ai-pricing" class="btn btn-sm btn-cta" onclick="runAiPricingAnalysis()" style="font-size: 0.75rem; padding: 4px 10px;">
+                                    Hitung via AI &rarr;
+                                </button>
+                            </div>
+                            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;" id="ai-pricing-status">
+                                Masukkan nama menu, kategori, dan harga normal, lalu klik tombol AI untuk optimasi harga lelang & durasi otomatis.
+                            </p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="input-start-bid">Harga Awal Lelang (Rp)</label>
+                                <input type="number" id="input-start-bid" placeholder="30000" min="1000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="input-buy-now">Harga Beli Langsung (Rp)</label>
+                                <input type="number" id="input-buy-now" placeholder="45000" min="2000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-duration">Durasi Lelang (Menit)</label>
+                                <input type="number" id="input-duration" value="45" min="5" max="360" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-stock">Jumlah Porsi / Paket Tersedia</label>
+                            <input type="number" id="input-stock" value="3" min="1" max="50" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-cta full-width">Tayangkan Lelang Sekarang &rarr;</button>
+                    </form>
+                </div>
+
+                <!-- TABEL PEMANTAUAN STATUS LELANG & PENJUALAN -->
+                <div class="card-panel">
+                    <h3>Status Lelang & Penjualan Aktif</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Produk Makanan</th>
+                                    <th>Harga Normal</th>
+                                    <th>Tawaran Saat Ini</th>
+                                    <th>Sisa Waktu</th>
+                                    <th>Status</th>
+                                    <th>Aksi Cepat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="merchant-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- =========================================================
+         3. TAMPILAN KHUSUS PENERIMA DONASI (PEMILIK YAYASAN)
+         ========================================================= -->
+    <main id="view-donation" class="view-section">
+        <div class="container">
+            <div class="dashboard-header">
+                <div>
+                    <span class="editorial-kicker">PORTAL YAYASAN TERVERIFIKASI</span>
+                    <h2>Distribusi & Klaim Donasi Pangan</h2>
+                    <p class="subtitle">Halaman khusus Pemilik Yayasan untuk mengklaim makanan berlebih dan memantau riwayat penyaluran secara transparan.</p>
+                </div>
+                <div class="donation-alert-box">
+                    <span>Akses Terverifikasi: <strong id="donation-owner-label">pedulikasih@gmail.com (Pemilik Yayasan)</strong></span>
+                </div>
+            </div>
+
+            <!-- DAFTAR KETERSEDIAAN DONASI -->
+            <div class="card-panel" style="margin-bottom: 2rem;">
+                <h3>Ketersediaan Makanan Siap Distribusi & Penjemputan</h3>
+                <div id="donation-grid" class="donation-grid"></div>
+            </div>
+
+            <!-- LOG TRANSPARANSI PENYALURAN DONASI -->
+            <div class="card-panel">
+                <h3>Riwayat Penyaluran & Klaim Donasi Pangan</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Waktu Klaim</th>
+                                <th>Mitra Donatur (Merchant)</th>
+                                <th>Item Makanan</th>
+                                <th>Kuantitas</th>
+                                <th>Penerima Manfaat</th>
+                                <th>Status Penjemputan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="donation-history-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- =========================================================
+         MODAL INTERAKTIF: IKUT LELANG (BIDDING)
+         ========================================================= -->
+    <div id="bid-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Ajukan tawaran lelang">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <span class="modal-badge">LIVE BIDDING</span>
+                    <h3>Ajukan Tawaran Lelang</h3>
+                </div>
+                <button class="close-modal" onclick="closeModal()" aria-label="Tutup">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-food-title" class="modal-item-title"></p>
+                <p id="modal-merchant-name" class="modal-merchant"></p>
+
+                <div class="modal-price-box">
+                    <div>
+                        <span>Tawaran Tertinggi Saat Ini</span>
+                        <strong id="modal-current-bid">Rp 0</strong>
+                    </div>
+                    <div style="text-align: right;">
+                        <span>Opsi Beli Langsung</span>
+                        <strong id="modal-buy-now" style="color: var(--gold-primary);">Rp 0</strong>
+                    </div>
+                </div>
+
+                <form id="bid-form">
+                    <input type="hidden" id="bid-item-id">
+                    <div class="form-group">
+                        <label for="bid-amount-input">Nominal Tawaran Anda (Rp)</label>
+                        <input type="number" id="bid-amount-input" step="1000" required>
+                        <small class="helper-text">Masukkan nominal minimal Rp 2.000 di atas penawaran saat ini.</small>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                        <button type="submit" class="btn btn-cta">Kirim Tawaran &rarr;</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- BACK TO TOP BUTTON -->
+    <button id="back-to-top" class="back-to-top" aria-label="Kembali ke atas">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <!-- FOOTER PROFESIONAL -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <span class="logo-monogram" style="width: 38px; height: 38px; font-size: 1rem;">SR</span>
+                    <span class="logo-main" style="font-size: 1.3rem;">SISA RASA</span>
+                </div>
+                <p>Ekosistem Lelang Makanan Surplus & Penyaluran Donasi Pangan Terintegrasi di Bengkulu.</p>
+            </div>
+            <div class="footer-links">
+                <h5>Navigasi</h5>
+                <a href="#" onclick="navigateHome(event)">Beranda</a>
+                <a href="#katalog-lelang">Katalog Lelang</a>
+                <a href="#keunggulan">Layanan Kami</a>
+                <a href="#tentang-kami">Tentang Kami</a>
+            </div>
+            <div class="footer-links">
+                <h5>Akses</h5>
+                <a href="#" onclick="showView('view-login')">Masuk / Daftar</a>
+                <a href="#" onclick="openPartnerLogin()">Gabung Merchant</a>
+                <a href="#" onclick="showView('view-login')">Portal Yayasan</a>
+            </div>
+            <div class="footer-links">
+                <h5>Kontak</h5>
+                <a href="tel:+6289528650250">+6289528650250</a>
+                <a href="mailto:kontak@sisarasa.com">kontak@sisarasa.com</a>
+                <a href="#tentang-kami">Kota Bengkulu</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SisaRasa — Artisanal Anti-Food Waste & Surplus Food Auction System.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Kebijakan Privasi</a>
+                <a href="#">Syarat & Ketentuan</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
