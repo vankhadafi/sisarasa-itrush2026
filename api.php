@@ -19,7 +19,7 @@ $connections = [
         'host' => 'localhost',
         'db'   => 'wnvjqqvi_rplxbasda',
         'user' => 'wnvjqqvi_tubes',
-        'pass' => 'S@yasuka123'
+        'pass' => 'YOUR_DB_PASSWORD'
     ],
     // 2. Konfigurasi Laragon Localhost (fallback otomatis)
     [

@@ -46,8 +46,9 @@ Tersedia tombol satu klik **"Akun Demo Penjurian"** pada halaman login website.
 Sesuai ketentuan Poin V.4 & V.5 Guidebook:
 
 - **Frontend:** Semantic HTML5, CSS3 Custom Properties (Editorial Luxury Theme), Vanilla JavaScript (ES6+ Asynchronous).
-- **Backend:** PHP Native RESTful API (`api.php`), Session Management, PDO MySQL.
-- **Database:** MySQL / MariaDB (`backend.sql`).
+- **Architecture:** Client-Side Standalone Web App with Persistent LocalStorage State Engine.
+- **Hosting:** GitHub Pages (Free, High-Availability, HTTPS).
+- **Backend Reference (Optional):** PHP Native RESTful API (`api.php`), MySQL (`backend.sql`) untuk integrasi server mandiri.
 - **Font:** Cormorant Garamond & Plus Jakarta Sans via Google Fonts.
 - **Aset Gambar:** Unsplash Open-Source License.
 - **Penggunaan AI Coding Assistant:** Digunakan untuk optimasi struktur kode, refactoring styling, dan perancangan algoritma perhitungan harga surplus.
@@ -57,7 +58,7 @@ Sesuai ketentuan Poin V.4 & V.5 Guidebook:
 ## 🌐 Live Website (Deployment)
 
 Aplikasi telah di-deploy dan dapat diakses publik secara langsung:
-- **URL Live Website:** [https://tubes-basdaxrpl.web.id/](https://tubes-basdaxrpl.web.id/)
+- **URL Live Website:** [https://vankhadafi.github.io/sisarasa-itrush2026/](https://vankhadafi.github.io/sisarasa-itrush2026/)
 
 ---
 

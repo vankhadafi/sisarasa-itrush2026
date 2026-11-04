@@ -1,7 +1,7 @@
 // ==========================================================================
 // KONFIGURASI API & STATE PENGGUNA AKTIF
 // ==========================================================================
-const API_URL = "api.php";
+const API_URL = null; // Client-side standalone (GitHub Pages)
 let currentUser = null;
 
 // Fungsi Sanitasi Anti-XSS
@@ -145,35 +145,9 @@ function loadLocalState() {
 // SINKRONISASI DATA DENGAN BACKEND PHP & MYSQL (api.php)
 // ==========================================================================
 async function fetchInitialData() {
-    let usingServerData = false;
-    try {
-        const res = await fetch(`${API_URL}?action=get_data`, {
-            credentials: "same-origin",
-            cache: "no-store"
-        });
-        if (!res.ok) throw new Error("Server PHP tidak merespons");
-        const data = await res.json();
-        if (data.success) {
-            foodItems = data.foodItems;
-            donationPool = data.donationPool;
-            donationHistory = data.donationHistory;
-
-            if (typeof data.merchantRevenue === "number") {
-                merchantRevenueTotal = data.merchantRevenue;
-            }
-            if (data.sessionUser && !currentUser) {
-                currentUser = data.sessionUser;
-                localStorage.setItem("sisarasa_user", JSON.stringify(currentUser));
-                redirectByRole(currentUser);
-            }
-            usingServerData = true;
-        }
-    } catch (err) {
-        console.info("Menggunakan penyimpanan permanen localStorage (tanpa server PHP aktif).");
-        loadLocalState();
-    }
-
-    syncItemTimers(usingServerData);
+    // Mode Client-side Standalone untuk GitHub Pages
+    loadLocalState();
+    syncItemTimers(false);
     saveLocalState();
     renderBuyerCatalog();
     renderMerchantDashboard();
@@ -1314,12 +1288,7 @@ async function runAiPricingAnalysis() {
     runBtn.disabled = true;
 
     try {
-        const res = await fetch(`${API_URL}?action=ai_pricing_suggest`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: titleInput, category, normalPrice, distance })
-        });
-        const result = await res.json();
+        throw new Error("Local heuristic mode");
 
         if (result.success && result.data) {
             document.getElementById("input-start-bid").value = result.data.suggestedBid;
