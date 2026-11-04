@@ -1,7 +1,6 @@
 // ==========================================================================
 // KONFIGURASI API & STATE PENGGUNA AKTIF
 // ==========================================================================
-const API_URL = null; // Client-side standalone (GitHub Pages)
 let currentUser = null;
 
 // Fungsi Sanitasi Anti-XSS
@@ -25,7 +24,7 @@ let searchQuery = "";
 let merchantRevenueTotal = Number(localStorage.getItem("sisarasa_merchant_revenue")) || 425000;
 
 // =====================================================================
-// DATA DEFAULT (FALLBACK) — digunakan saat server PHP tidak tersedia
+// DATA DEFAULT KATALOG MAKANAN SURPLUS & DONASI
 // =====================================================================
 const defaultFoodItems = [
     {
@@ -106,7 +105,7 @@ const defaultDonationHistory = [
     }
 ];
 
-// Akun default untuk mode offline (tanpa server PHP)
+// Akun default sistem (disimpan di LocalStorage)
 let localUsers = [
     { id: 1, name: "Van Khadafi (Pemilik Yayasan)", email: "pedulikasih@gmail.com", password: "tubes", role: "donation", organization: "Yayasan Peduli Kasih" },
     { id: 2, name: "Admin Artisan Boulangerie", email: "merchant@sisarasa.com", password: "merchant123", role: "merchant", organization: "Artisan Boulangerie" },
@@ -142,12 +141,12 @@ function loadLocalState() {
 }
 
 // ==========================================================================
-// SINKRONISASI DATA DENGAN BACKEND PHP & MYSQL (api.php)
+// INISIALISASI & PERSISTENSI STATE (CLIENT-SIDE ENGINE)
 // ==========================================================================
 async function fetchInitialData() {
     // Mode Client-side Standalone untuk GitHub Pages
     loadLocalState();
-    syncItemTimers(false);
+    syncItemTimers();
     saveLocalState();
     renderBuyerCatalog();
     renderMerchantDashboard();
@@ -309,39 +308,20 @@ document.getElementById("unified-login-form").addEventListener("submit", async f
     submitBtn.innerHTML = '<span class="btn-spinner"></span> Memproses...';
     submitBtn.disabled = true;
 
-    try {
-        const res = await fetch(`${API_URL}?action=login`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
-        if (!res.ok) throw new Error("Fallback ke autentikasi lokal");
-        const result = await res.json();
-
-        if (!result.success) {
-            showToast(`⚠️ ${result.message}`, "warning");
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            return;
-        }
-        currentUser = result.user;
-    } catch (err) {
-        const found = localUsers.find(u => u.email.toLowerCase() === email && u.password === password);
-        if (!found) {
-            showToast("⚠️ Email atau kata sandi salah!", "error");
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            return;
-        }
-        if (found.role === "donation" && found.email.toLowerCase() !== "pedulikasih@gmail.com") {
-            showToast("⚠️ Akses Penerima Donasi hanya untuk pedulikasih@gmail.com!", "error");
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            return;
-        }
-        currentUser = { ...found };
+    const found = localUsers.find(u => u.email.toLowerCase() === email && u.password === password);
+    if (!found) {
+        showToast("⚠️ Email atau kata sandi salah!", "error");
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        return;
     }
+    if (found.role === "donation" && found.email.toLowerCase() !== "pedulikasih@gmail.com") {
+        showToast("⚠️ Akses Penerima Donasi hanya untuk pedulikasih@gmail.com!", "error");
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        return;
+    }
+    currentUser = { ...found };
 
     localStorage.setItem("sisarasa_user", JSON.stringify(currentUser));
     showToast(`✅ Selamat datang, ${currentUser.name}! Mengarahkan ke dashboard...`, "success");
@@ -375,48 +355,26 @@ document.getElementById("unified-register-form").addEventListener("submit", asyn
         return;
     }
 
-    // Show loading state
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<span class="btn-spinner"></span> Memproses...';
-    submitBtn.disabled = true;
 
-    try {
-        const res = await fetch(`${API_URL}?action=register`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password, role, organization })
-        });
-        if (!res.ok) throw new Error("Fallback registrasi lokal");
-        const result = await res.json();
-
-        if (!result.success) {
-            showToast(`⚠️ ${result.message}`, "warning");
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            return;
-        }
-        currentUser = result.user;
-    } catch (err) {
-        if (localUsers.some(u => u.email.toLowerCase() === email)) {
-            showToast("⚠️ Email sudah digunakan. Silakan login.", "warning");
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            return;
-        }
-        const newUser = {
-            id: Date.now(),
-            name,
-            email,
-            password,
-            role,
-            organization: organization || (role === "merchant" ? name : "Publik / Pembeli")
-        };
-        localUsers.push(newUser);
-        localStorage.setItem("sisarasa_local_users", JSON.stringify(localUsers));
-        currentUser = newUser;
+    if (localUsers.some(u => u.email.toLowerCase() === email)) {
+        showToast("⚠️ Email sudah digunakan. Silakan login.", "warning");
+        return;
     }
+    const newUser = {
+        id: Date.now(),
+        name,
+        email,
+        password,
+        role,
+        organization: organization || (role === "merchant" ? name : "Publik / Pembeli")
+    };
+    localUsers.push(newUser);
+    try {
+        localStorage.setItem("sisarasa_local_users", JSON.stringify(localUsers));
+    } catch (e) {}
+    currentUser = newUser;
 
     localStorage.setItem("sisarasa_user", JSON.stringify(currentUser));
     showToast(`🎉 Akun berhasil dibuat! Mengarahkan ke dashboard...`, "success");
@@ -426,12 +384,7 @@ document.getElementById("unified-register-form").addEventListener("submit", asyn
     redirectByRole(currentUser);
 });
 
-async function handleLogout() {
-    try {
-        await fetch(`${API_URL}?action=logout`, {
-            credentials: "same-origin"
-        });
-    } catch (e) {}
+function handleLogout() {
     currentUser = null;
     localStorage.removeItem("sisarasa_user");
     document.getElementById("guest-nav-actions").classList.remove("hidden");
@@ -754,25 +707,7 @@ document.getElementById("bid-form").addEventListener("submit", async function (e
         return;
     }
 
-    try {
-        const res = await fetch(`${API_URL}?action=place_bid`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                itemId: id,
-                amount: amount,
-                userId: currentUser ? currentUser.id : null
-            })
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (!data.success) {
-                showToast(`⚠️ ${data.message}`, "warning");
-                return;
-            }
-        }
-    } catch (err) {}
+    // Client-side instant update
 
     item.currentBid = amount;
     saveLocalState();
@@ -783,47 +718,19 @@ document.getElementById("bid-form").addEventListener("submit", async function (e
 });
 
 // Beli Langsung (Pendapatan masuk ke akun Merchant pemilik produk)
-async function buyNowItem(itemId) {
+function buyNowItem(itemId) {
     if (!requireBuyerLogin()) return;
 
     const item = foodItems.find(f => Number(f.id) === Number(itemId));
     if (!item || Number(item.stock) <= 0) return;
 
-    let syncedFromServer = false;
-    try {
-        const res = await fetch(`${API_URL}?action=buy_now`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                itemId: item.id,
-                userId: currentUser ? currentUser.id : null
-            })
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (!data.success) {
-                showToast(`⚠️ ${data.message}`, "warning");
-                return;
-            }
-            if (data.newStock !== undefined && data.newStatus !== undefined) {
-                item.stock = Number(data.newStock);
-                item.status = data.newStatus;
-                syncedFromServer = true;
-            }
-        }
-    } catch (err) {}
-
-    if (!syncedFromServer) {
-        item.stock = Number(item.stock) - 1;
-        if (item.stock <= 0) {
-            item.status = "sold";
-        }
+    item.stock = Number(item.stock) - 1;
+    if (item.stock <= 0) {
+        item.status = "sold_out";
+        item.remainingSeconds = 0;
     }
 
-    // Tambahkan pendapatan khusus ke merchant pemilik makanan ini
-    addMerchantRevenue(item.merchant, item.buyNowPrice);
-
+    addMerchantRevenue(item.buyNowPrice);
     saveLocalState();
     renderBuyerCatalog();
     renderMerchantDashboard();
@@ -871,36 +778,7 @@ document.getElementById("merchant-upload-form").addEventListener("submit", async
     submitBtn.innerHTML = '<span class="btn-spinner"></span> Mengunggah...';
     submitBtn.disabled = true;
 
-    try {
-        const res = await fetch(`${API_URL}?action=upload_food`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (!data.success) {
-                showToast(`⚠️ ${data.message}`, "warning");
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-            if (data.item) {
-                createdItem = {
-                    ...data.item,
-                    id: Number(data.item.id),
-                    distance: Number(data.item.distance),
-                    normalPrice: Number(data.item.normalPrice),
-                    currentBid: Number(data.item.currentBid),
-                    buyNowPrice: Number(data.item.buyNowPrice),
-                    stock: Number(data.item.stock),
-                    remainingSeconds: Number(data.item.remainingSeconds),
-                    endTime: endTime
-                };
-            }
-        }
-    } catch (err) {}
+    // Client-side direct registration
 
     if (!createdItem) {
         const fallbackId = foodItems.reduce((max, f) => Math.max(max, Number(f.id) || 0), 0) + 1;
@@ -942,43 +820,21 @@ document.getElementById("merchant-upload-form").addEventListener("submit", async
 });
 
 // Konversi Makanan ke Program Donasi
-async function convertToDonation(itemId) {
+function convertToDonation(itemId) {
     const item = foodItems.find(f => Number(f.id) === Number(itemId));
     if (!item || item.status === "donated") return;
 
     item.status = "donated";
     item.remainingSeconds = 0;
 
-    let createdDonation = null;
-    try {
-        const res = await fetch(`${API_URL}?action=convert_donation`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ itemId: item.id })
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (data.success && data.donation) {
-                createdDonation = {
-                    ...data.donation,
-                    id: Number(data.donation.id)
-                };
-            }
-        }
-    } catch (err) {}
-
-    if (!createdDonation) {
-        const fallbackDonId = donationPool.reduce((max, d) => Math.max(max, Number(d.id) || 100), 100) + 1;
-        createdDonation = {
-            id: fallbackDonId,
-            merchant: item.merchant,
-            title: item.title,
-            portions: `${item.stock} Paket`,
-            pickupDeadline: "Hari ini, 21:30 WIB",
-            location: `${item.distance} km dari lokasi Anda`
-        };
-    }
+    const createdDonation = {
+        id: Date.now(),
+        merchant: item.merchant,
+        title: item.title,
+        portion: `${item.stock} Porsi`,
+        expiresIn: "Tersedia untuk Pengambilan Segera",
+        status: "available"
+    };
 
     donationPool.unshift(createdDonation);
     saveLocalState();
@@ -990,7 +846,7 @@ async function convertToDonation(itemId) {
 }
 
 // Klaim Donasi oleh Pemilik Yayasan
-async function claimDonation(donationId) {
+function claimDonation(donationId) {
     if (!currentUser || currentUser.email.toLowerCase() !== "pedulikasih@gmail.com") {
         showToast("⚠️ Hanya Pemilik Yayasan (pedulikasih@gmail.com) yang berhak mengklaim donasi!", "error");
         return;
@@ -999,33 +855,16 @@ async function claimDonation(donationId) {
     const index = donationPool.findIndex(d => Number(d.id) === Number(donationId));
     if (index === -1) return;
 
-    let claimedAtText = "Baru saja";
-    let receiverText = `Yayasan Peduli Kasih (${currentUser.email})`;
-
-    try {
-        const res = await fetch(`${API_URL}?action=claim_donation`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ donationId: Number(donationId), email: currentUser.email })
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (!data.success) {
-                showToast(`⚠️ ${data.message}`, "warning");
-                return;
-            }
-            if (data.claimedAt) claimedAtText = data.claimedAt;
-            if (data.claimedBy) receiverText = data.claimedBy;
-        }
-    } catch (err) {}
-
     const claimed = donationPool.splice(index, 1)[0];
+    const claimedAtText = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB";
+    const receiverText = `Yayasan Peduli Kasih (${currentUser.email})`;
+
     donationHistory.unshift({
+        id: Date.now(),
         time: claimedAtText,
         merchant: claimed.merchant,
-        item: claimed.title,
-        portions: claimed.portions,
+        title: claimed.title,
+        quantity: claimed.portion,
         receiver: receiverText,
         status: "Siap Dijemput"
     });

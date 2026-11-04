@@ -23,7 +23,7 @@ Sesuai ketentuan Ketentuan Karya Website IT RUSH 2026 (Poin V.1):
 - **Fungsi:**
   - Menghitung batas kelayakan konsumsi makanan berlebih berdasarkan kategori (bakery, makanan berat, buah/sayur) dan faktor waktu lelang sore/malam (*peak food rescue window*).
   - Menghasilkan rekomendasi harga awal lelang dan harga beli langsung secara otomatis untuk memaksimalkan *clearance rate* stok surplus tanpa merugikan merchant.
-- **Implementasi:** Endpoint API `api.php?action=ai_pricing_suggest` didukung *client-side fallback* cerdas di `script.js`.
+- **Implementasi:** Heuristic AI engine dan predictive shelf-life calculator terintegrasi langsung di `script.js`.
 
 ---
 
@@ -45,10 +45,9 @@ Tersedia tombol satu klik **"Akun Demo Penjurian"** pada halaman login website.
 
 Sesuai ketentuan Poin V.4 & V.5 Guidebook:
 
-- **Frontend:** Semantic HTML5, CSS3 Custom Properties (Editorial Luxury Theme), Vanilla JavaScript (ES6+ Asynchronous).
-- **Architecture:** Client-Side Standalone Web App with Persistent LocalStorage State Engine.
-- **Hosting:** GitHub Pages (Free, High-Availability, HTTPS).
-- **Backend Reference (Optional):** PHP Native RESTful API (`api.php`), MySQL (`backend.sql`) untuk integrasi server mandiri.
+- **Frontend & App Engine:** Semantic HTML5, CSS3 Custom Properties (Editorial Luxury Theme), Vanilla JavaScript (ES6+ Asynchronous).
+- **Architecture:** Client-Side Standalone Web App dengan Persistent State Engine (`localStorage`).
+- **Deployment:** GitHub Pages (High Availability, HTTPS, Zero Downtime).
 - **Font:** Cormorant Garamond & Plus Jakarta Sans via Google Fonts.
 - **Aset Gambar:** Unsplash Open-Source License.
 - **Penggunaan AI Coding Assistant:** Digunakan untuk optimasi struktur kode, refactoring styling, dan perancangan algoritma perhitungan harga surplus.
