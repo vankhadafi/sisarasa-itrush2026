@@ -6,6 +6,16 @@ Karya ini diajukan untuk **IT RUSH 2026** — Sub-tema: **Lingkungan dan Konserv
 
 ---
 
+## 👥 Profil Pengembang & Tim
+
+- **Nama Tim:** **PARALEL**
+- **Perguruan Tinggi:** Universitas Bengkulu
+- **Anggota Tim:**
+  1. **Ivan Khadafi** (G1A025088) — *Ketua Tim*
+  2. **Angel Ayu Diaz Theovi** (G1A025037) — *Anggota Tim*
+
+---
+
 ## 📌 Fitur Utama
 
 1. **Live Auction System:** Lelang makanan berlebih dengan hitungan mundur dinamis dan penawaran waktu nyata.
