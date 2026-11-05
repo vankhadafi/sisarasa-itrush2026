@@ -724,11 +724,10 @@ function buyNowItem(itemId) {
     const item = foodItems.find(f => Number(f.id) === Number(itemId));
     if (!item || Number(item.stock) <= 0) return;
 
-    item.stock = Number(item.stock) - 1;
-    if (item.stock <= 0) {
-        item.status = "sold_out";
-        item.remainingSeconds = 0;
-    }
+    // Sekali beli langsung habiskan seluruh stok & ubah status ke sold_out
+    item.stock = 0;
+    item.status = "sold_out";
+    item.remainingSeconds = 0;
 
     addMerchantRevenue(item.buyNowPrice);
     saveLocalState();
