@@ -2,43 +2,43 @@
    1. DESIGN TOKENS: WARM LUXURY, CHAMPAGNE GOLD & ESPRESSO (SHINGLOW STYLE)
    ========================================================================== */
 :root {
-    /* Luxury Warm Palette */
-    --espresso-dark: #231A14;
-    --espresso-medium: #3D2E24;
-    --gold-primary: #9E7232;
-    --gold-hover: #7E5820;
-    --gold-accent: #C59B5F;
-    --gold-light: #F5EFE6;
-    --gold-border: rgba(158, 114, 50, 0.25);
+    /* IT RUSH 2026 Eco-Tech Palette (Coastal Ocean Blue & Mangrove Green) */
+    --espresso-dark: #0F2438;       /* Deep Tech Navy */
+    --espresso-medium: #1B365D;     /* Coastal Navy Medium */
+    --gold-primary: #1D70B8;        /* IT RUSH Ocean Blue Primary */
+    --gold-hover: #145288;          /* Deep Sky Blue Hover */
+    --gold-accent: #2E8B57;         /* Mangrove Sea Green Accent */
+    --gold-light: #EBF5FB;          /* Sky Blue Tint */
+    --gold-border: rgba(29, 112, 184, 0.22);
 
     /* Surface & Background Colors */
-    --bg-main: #FAF6F0;
-    --bg-card: #FFFDF9;
+    --bg-main: #F3F8FC;             /* Fresh Coastal Canvas */
+    --bg-card: #FFFFFF;             /* Pure White Card */
     --bg-white: #FFFFFF;
-    --text-primary: #231A14;
-    --text-secondary: #6E5D4F;
-    --text-muted: #A39382;
-    --border-soft: #E8DEC8;
+    --text-primary: #0F2438;        /* Deep Navy Charcoal */
+    --text-secondary: #486581;      /* Slate Blue Muted */
+    --text-muted: #829AB1;          /* Soft Sky Slate */
+    --border-soft: #D3E2EE;         /* Fresh Sky Border */
 
     /* Semantic Status */
-    --danger-red: #B91C1C;
+    --danger-red: #DC2626;
     --danger-bg: #FEF2F2;
-    --success-green: #2E6F40;
-    --success-bg: #E6F4EA;
-    --warning-amber: #92400E;
+    --success-green: #15803D;       /* Mangrove Green */
+    --success-bg: #ECFDF5;
+    --warning-amber: #D97706;       /* Star Amber */
     --warning-bg: #FFFBEB;
-    --info-blue: #1E40AF;
-    --info-bg: #EFF6FF;
+    --info-blue: #0284C7;
+    --info-bg: #F0F9FF;
 
     /* Typography */
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 
     /* Shadows & Radii */
-    --shadow-sm: 0 4px 14px rgba(35, 26, 20, 0.04);
-    --shadow-clean: 0 12px 32px -6px rgba(35, 26, 20, 0.07);
-    --shadow-hover: 0 22px 45px -10px rgba(35, 26, 20, 0.14);
-    --shadow-elevated: 0 32px 64px -12px rgba(35, 26, 20, 0.18);
+    --shadow-sm: 0 4px 14px rgba(15, 36, 56, 0.04);
+    --shadow-clean: 0 12px 32px -6px rgba(15, 36, 56, 0.07);
+    --shadow-hover: 0 22px 45px -10px rgba(15, 36, 56, 0.12);
+    --shadow-elevated: 0 32px 64px -12px rgba(15, 36, 56, 0.16);
     --radius-sm: 10px;
     --radius-md: 18px;
     --radius-lg: 26px;
@@ -78,7 +78,7 @@ body {
    2. LUXURY EDITORIAL NAVBAR
    ========================================================================== */
 .navbar {
-    background: rgba(250, 246, 240, 0.92);
+    background: rgba(243, 248, 252, 0.94);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-soft);
@@ -94,7 +94,7 @@ body {
 
 .navbar-scrolled {
     padding: 0.65rem 6%;
-    box-shadow: 0 4px 20px rgba(35, 26, 20, 0.08);
+    box-shadow: 0 4px 20px rgba(15, 36, 56, 0.08);
 }
 
 .logo {
@@ -108,8 +108,8 @@ body {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--espresso-dark), var(--gold-primary));
-    color: #F5EFE6;
+    background: linear-gradient(135deg, #0F2438, #1D70B8);
+    color: #FFFFFF;
     font-family: var(--font-serif);
     font-size: 1.35rem;
     font-weight: 700;
@@ -274,7 +274,7 @@ body {
     position: fixed;
     inset: 0;
     top: 0;
-    background: rgba(35, 26, 20, 0.4);
+    background: rgba(15, 36, 56, 0.4);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 99;
@@ -302,7 +302,7 @@ body {
     gap: 0.5rem;
     transform: translateX(100%);
     transition: transform 0.4s var(--ease-out-expo);
-    box-shadow: -12px 0 40px rgba(35, 26, 20, 0.12);
+    box-shadow: -12px 0 40px rgba(15, 36, 56, 0.12);
     overflow-y: auto;
 }
 
@@ -337,7 +337,7 @@ body {
    3. SPLIT EDITORIAL HERO BANNER
    ========================================================================== */
 .hero {
-    background: linear-gradient(115deg, #F3ECE1 0%, #EAE0D0 52%, #DFD1BC 100%);
+    background: linear-gradient(125deg, #E6F3FB 0%, #D8EEF9 50%, #E3F6EC 100%);
     border-bottom: 1px solid var(--border-soft);
     padding: 4.5rem 6%;
     display: grid;
@@ -439,7 +439,7 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, rgba(35, 26, 20, 0.05), rgba(35, 26, 20, 0.25));
+    background: linear-gradient(to right, rgba(15, 36, 56, 0.05), rgba(15, 36, 56, 0.25));
 }
 
 /* ==========================================================================
@@ -482,7 +482,7 @@ body {
 }
 
 .btn-cta {
-    background: linear-gradient(135deg, var(--gold-primary) 0%, #835B22 100%);
+    background: linear-gradient(135deg, var(--gold-primary) 0%, #145288 100%);
     color: var(--bg-white);
     box-shadow: 0 8px 20px rgba(158, 114, 50, 0.28);
 }
@@ -531,7 +531,7 @@ body {
 }
 
 .btn-secondary:hover {
-    background-color: #E8DEC8;
+    background-color: #D3E2EE;
 }
 
 .btn:disabled {
@@ -603,7 +603,7 @@ body {
 }
 
 .editorial-kicker.gold-light {
-    color: #E2C18A;
+    color: #F59E0B;
 }
 
 .editorial-section-header h2,
@@ -674,7 +674,7 @@ body {
 }
 
 .pill.active {
-    background: linear-gradient(135deg, var(--gold-primary), #835B22);
+    background: linear-gradient(135deg, var(--gold-primary), #145288);
     color: var(--bg-white);
     border-color: transparent;
     box-shadow: 0 4px 12px rgba(158, 114, 50, 0.25);
@@ -783,9 +783,9 @@ body {
     top: 14px;
     left: 14px;
     z-index: 2;
-    background: rgba(35, 26, 20, 0.82);
+    background: rgba(15, 36, 56, 0.82);
     backdrop-filter: blur(6px);
-    color: #F5EFE6;
+    color: #FFFFFF;
     font-weight: 700;
     font-size: 0.76rem;
     padding: 5px 13px;
@@ -798,9 +798,9 @@ body {
     bottom: 12px;
     right: 14px;
     z-index: 2;
-    background-color: rgba(35, 26, 20, 0.75);
+    background-color: rgba(15, 36, 56, 0.75);
     backdrop-filter: blur(6px);
-    color: #FFFDF9;
+    color: #FFFFFF;
     font-size: 0.75rem;
     font-weight: 600;
     padding: 4px 11px;
@@ -873,14 +873,14 @@ body {
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--gold-primary), #7E5820);
-    color: #FFFDF9;
+    background: linear-gradient(135deg, var(--gold-primary), #145288);
+    color: #FFFFFF;
     font-size: 1.15rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 4px solid var(--bg-card);
-    box-shadow: 0 6px 14px rgba(35, 26, 20, 0.15);
+    box-shadow: 0 6px 14px rgba(15, 36, 56, 0.15);
     z-index: 3;
 }
 
@@ -991,7 +991,7 @@ body {
 
 .skeleton-img {
     height: 215px;
-    background: linear-gradient(90deg, #EDE5D8 25%, #F5EFE6 50%, #EDE5D8 75%);
+    background: linear-gradient(90deg, #E2EDF5 25%, #F0F7FC 50%, #E2EDF5 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -1006,7 +1006,7 @@ body {
 .skeleton-line {
     height: 14px;
     border-radius: 6px;
-    background: linear-gradient(90deg, #EDE5D8 25%, #F5EFE6 50%, #EDE5D8 75%);
+    background: linear-gradient(90deg, #E2EDF5 25%, #F0F7FC 50%, #E2EDF5 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -1048,7 +1048,7 @@ body {
    7. STRIP 4 KEUNGGULAN & BANNER GELAP BAWAH
    ========================================================================== */
 .feature-strip {
-    background-color: #F3ECE1;
+    background-color: #EBF5FB;
     border-top: 1px solid var(--border-soft);
     border-bottom: 1px solid var(--border-soft);
     padding: 2.4rem 6%;
@@ -1108,10 +1108,10 @@ body {
     margin: 3.5rem 6% 2rem;
     border-radius: var(--radius-lg);
     background: 
-        linear-gradient(90deg, rgba(28, 20, 15, 0.94) 0%, rgba(35, 26, 20, 0.82) 55%, rgba(35, 26, 20, 0.65) 100%),
+        linear-gradient(90deg, rgba(28, 20, 15, 0.94) 0%, rgba(15, 36, 56, 0.82) 55%, rgba(15, 36, 56, 0.65) 100%),
         url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
     padding: 3.8rem 4rem;
-    color: #FFFDF9;
+    color: #FFFFFF;
     box-shadow: var(--shadow-hover);
 }
 
@@ -1132,7 +1132,7 @@ body {
     font-size: 2.6rem;
     font-weight: 700;
     margin-bottom: 0.9rem;
-    color: #FFFDF9;
+    color: #FFFFFF;
 }
 
 .luxury-banner-text p {
@@ -1261,7 +1261,7 @@ body {
 
 .auth-tab.active {
     background: linear-gradient(135deg, var(--espresso-dark), var(--espresso-medium));
-    color: #FFFDF9;
+    color: #FFFFFF;
 }
 
 .auth-header {
@@ -1389,7 +1389,7 @@ body {
 
 .mini-stat.highlight {
     background: linear-gradient(135deg, var(--espresso-dark), var(--espresso-medium));
-    color: #FFFDF9;
+    color: #FFFFFF;
     border: none;
 }
 
@@ -1411,7 +1411,7 @@ body {
 }
 
 .mini-stat.highlight strong {
-    color: #E2C18A;
+    color: #F59E0B;
 }
 
 .merchant-grid {
@@ -1575,7 +1575,7 @@ body {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(35, 26, 20, 0.65);
+    background: rgba(15, 36, 56, 0.65);
     backdrop-filter: blur(6px);
     display: none;
     align-items: center;
@@ -1715,7 +1715,7 @@ body {
 
 .toast {
     background-color: var(--espresso-dark);
-    color: #FFFDF9;
+    color: #FFFFFF;
     padding: 14px 20px;
     border-radius: 12px;
     box-shadow: var(--shadow-hover);
@@ -1776,7 +1776,7 @@ body {
     height: 46px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--espresso-dark), var(--espresso-medium));
-    color: #FFFDF9;
+    color: #FFFFFF;
     border: 1.5px solid var(--gold-border);
     cursor: pointer;
     display: flex;
@@ -1797,7 +1797,7 @@ body {
 }
 
 .back-to-top:hover {
-    background: linear-gradient(135deg, var(--gold-primary), #835B22);
+    background: linear-gradient(135deg, var(--gold-primary), #145288);
     transform: translateY(-3px);
     box-shadow: var(--shadow-hover);
 }
@@ -1831,7 +1831,7 @@ footer {
 }
 
 .footer-brand .logo-main {
-    color: #FFFDF9;
+    color: #FFFFFF;
 }
 
 .footer-brand p {
@@ -1850,7 +1850,7 @@ footer {
 .footer-links h5 {
     font-family: var(--font-serif);
     font-size: 1.1rem;
-    color: #FFFDF9;
+    color: #FFFFFF;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
@@ -2131,7 +2131,7 @@ footer {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    background: rgba(35, 26, 20, 0.88);
+    background: rgba(15, 36, 56, 0.88);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     color: var(--gold-light);
