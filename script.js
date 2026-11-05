@@ -513,14 +513,13 @@ function getMerchantRevenue(merchantName) {
         revenueMap = {};
     }
 
-    // Jika belum ada riwayat transaksi, hitung estimasi awal dari item berstatus 'sold' milik merchant ini
+    // Jika belum ada riwayat transaksi, hitung pendapatan murni dari item berstatus 'sold' milik merchant ini
     if (revenueMap[key] === undefined) {
         const soldRevenue = foodItems
             .filter(f => String(f.merchant || "").trim().toLowerCase() === key && f.status === "sold")
             .reduce((sum, f) => sum + Number(f.buyNowPrice || 0), 0);
         
-        // Beri saldo awal simulasi Rp 120.000 khusus untuk akun demo Artisan Boulangerie
-        revenueMap[key] = key === "artisan boulangerie" ? (120000 + soldRevenue) : soldRevenue;
+        revenueMap[key] = soldRevenue;
         localStorage.setItem("sisarasa_revenue_by_merchant", JSON.stringify(revenueMap));
     }
     return Number(revenueMap[key] || 0);
