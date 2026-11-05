@@ -560,7 +560,10 @@ function renderMerchantDashboard() {
     }
 
     // Filter hanya makanan milik merchant yang sedang login
-    const myFoodItems = foodItems.filter(item => isOwnedByCurrentMerchant(item));
+    // Hilangkan mock default Croissant (id 1) agar dashboard merchant demo bersih
+    const myFoodItems = foodItems
+        .filter(item => isOwnedByCurrentMerchant(item))
+        .filter(item => Number(item.id) !== 1);
     const activeCount = myFoodItems.filter(f => f.status === "active").length;
     const myRevenue = getMerchantRevenue(myMerchantName);
 
