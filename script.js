@@ -255,7 +255,7 @@ function redirectByRole(user) {
         document.getElementById("input-merchant").value = user.organization || user.name;
         renderMerchantDashboard();
         showView("view-merchant");
-    } else if (user.role === "donation" && user.email.toLowerCase() === "pedulikasih@gmail.com") {
+    } else if (user.role === "donation") {
         document.getElementById("donation-owner-label").textContent = `${user.name} (${user.email})`;
         renderDonationPortal();
         showView("view-donation");
@@ -315,12 +315,6 @@ document.getElementById("unified-login-form").addEventListener("submit", async f
         submitBtn.disabled = false;
         return;
     }
-    if (found.role === "donation" && found.email.toLowerCase() !== "pedulikasih@gmail.com") {
-        showToast("⚠️ Akses Penerima Donasi hanya untuk pedulikasih@gmail.com!", "error");
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-        return;
-    }
     currentUser = { ...found };
 
     localStorage.setItem("sisarasa_user", JSON.stringify(currentUser));
@@ -350,8 +344,8 @@ document.getElementById("unified-register-form").addEventListener("submit", asyn
         return;
     }
 
-    if (email === "pedulikasih@gmail.com" || role === "donation") {
-        showToast("⚠️ Akun Pemilik Yayasan (pedulikasih@gmail.com) sudah terdaftar khusus. Silakan langsung login.", "warning");
+    if (email === "pedulikasih@gmail.com") {
+        showToast("⚠️ Akun bawaan (pedulikasih@gmail.com) sudah terdaftar. Silakan langsung login.", "warning");
         return;
     }
 
@@ -513,10 +507,10 @@ function getMerchantRevenue(merchantName) {
         revenueMap = {};
     }
 
-    // Jika belum ada riwayat transaksi, hitung pendapatan murni dari item berstatus 'sold' milik merchant ini
+    // Jika belum ada riwayat transaksi, hitung pendapatan murni dari item berstatus 'sold' / 'sold_out' milik merchant ini
     if (revenueMap[key] === undefined) {
         const soldRevenue = foodItems
-            .filter(f => String(f.merchant || "").trim().toLowerCase() === key && f.status === "sold")
+            .filter(f => String(f.merchant || "").trim().toLowerCase() === key && (f.status === "sold" || f.status === "sold_out"))
             .reduce((sum, f) => sum + Number(f.buyNowPrice || 0), 0);
         
         revenueMap[key] = soldRevenue;
@@ -590,7 +584,7 @@ function renderMerchantDashboard() {
         const safeStock = Number(item.stock);
 
         let badgeHtml = `<span class="status-tag status-active">Dilelang (${safeStock} pkt)</span>`;
-        if (item.status === "sold") badgeHtml = `<span class="status-tag status-sold">Terjual Habis</span>`;
+        if (item.status === "sold" || item.status === "sold_out") badgeHtml = `<span class="status-tag status-sold">Terjual Habis</span>`;
         if (item.status === "donated") badgeHtml = `<span class="status-tag status-donated">Dialihkan ke Donasi</span>`;
 
         return `
@@ -726,12 +720,12 @@ function buyNowItem(itemId) {
     const item = foodItems.find(f => Number(f.id) === Number(itemId));
     if (!item || Number(item.stock) <= 0) return;
 
-    // Sekali beli langsung habiskan seluruh stok & ubah status ke sold_out
+    // Sekali beli langsung habiskan seluruh stok & ubah status ke sold
     item.stock = 0;
-    item.status = "sold_out";
+    item.status = "sold";
     item.remainingSeconds = 0;
 
-    addMerchantRevenue(item.buyNowPrice);
+    addMerchantRevenue(item.merchant, item.buyNowPrice);
     saveLocalState();
     renderBuyerCatalog();
     renderMerchantDashboard();
@@ -832,8 +826,9 @@ function convertToDonation(itemId) {
         id: Date.now(),
         merchant: item.merchant,
         title: item.title,
-        portion: `${item.stock} Porsi`,
-        expiresIn: "Tersedia untuk Pengambilan Segera",
+        portions: `${item.stock} Porsi`,
+        pickupDeadline: "Hari ini, 22:00 WIB",
+        location: `${item.distance || 1.0} km dari lokasi Anda`,
         status: "available"
     };
 
@@ -848,8 +843,8 @@ function convertToDonation(itemId) {
 
 // Klaim Donasi oleh Pemilik Yayasan
 function claimDonation(donationId) {
-    if (!currentUser || currentUser.email.toLowerCase() !== "pedulikasih@gmail.com") {
-        showToast("⚠️ Hanya Pemilik Yayasan (pedulikasih@gmail.com) yang berhak mengklaim donasi!", "error");
+    if (!currentUser || currentUser.role !== "donation") {
+        showToast("⚠️ Hanya akun Pemilik / Penerima Yayasan yang berhak mengklaim donasi!", "error");
         return;
     }
 
@@ -858,21 +853,21 @@ function claimDonation(donationId) {
 
     const claimed = donationPool.splice(index, 1)[0];
     const claimedAtText = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB";
-    const receiverText = `Yayasan Peduli Kasih (${currentUser.email})`;
+    const receiverText = `${currentUser.organization || currentUser.name} (${currentUser.email})`;
 
     donationHistory.unshift({
         id: Date.now(),
         time: claimedAtText,
         merchant: claimed.merchant,
-        title: claimed.title,
-        quantity: claimed.portion,
+        item: claimed.title,
+        portions: claimed.portions || claimed.portion || "1 Paket",
         receiver: receiverText,
         status: "Siap Dijemput"
     });
 
     saveLocalState();
     renderDonationPortal();
-    showToast(`🎉 Donasi "${claimed.title}" berhasil diklaim oleh Pemilik Yayasan!`, "success");
+    showToast(`🎉 Donasi "${claimed.title}" berhasil diklaim oleh Yayasan!`, "success");
 }
 
 // ==========================================================================
